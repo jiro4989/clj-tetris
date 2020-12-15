@@ -1,0 +1,12 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src/dev"
+  "src/main"
+  "src/test"]
+
+ :dependencies
+ []
+
+ :builds
+ {:main {:target :browser
+         :modules {:main {:init-fn clj-tetris.core/init}}}}}
