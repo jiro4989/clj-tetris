@@ -1,16 +1,22 @@
 (ns clj-tetris.core
   (:require [reagent.core :as r]
-            [reagent.dom :as rd]))
+            [reagent.dom :as rd]
+            [clojure.string :as string]))
 
 (def dom-root (js/document.getElementById "root"))
 
 (def height (r/atom 170))
 (def weight (r/atom 60))
 
-(defn component-text-input [value]
+(defn component-number-input [value]
   [:input {:type "number"
            :value @value
            :on-change #(reset! value (-> % .-target .-value js/parseInt))}])
+
+(defn component-text-input [value]
+  [:input {:type "text"
+           :value @value
+           :on-change #(reset! value (-> % .-target .-value))}])
 
 (defn bmi [h w]
   (-> w
@@ -26,11 +32,11 @@
     [:tbody
      [:tr
       [:td "身長"]
-      [:td (component-text-input height)]
+      [:td (component-number-input height)]
       [:td "cm"]]
      [:tr
       [:td "体重"]
-      [:td (component-text-input weight)]
+      [:td (component-number-input weight)]
       [:td "kg"]]]]
    [:hr]
    [:div "計算結果"]
@@ -41,7 +47,7 @@
     (fn []
       [:tr
        [:td "10進数"]
-       [:td (component-text-input decimal)]
+       [:td (component-number-input decimal)]
        [:td n "進数"]
        [:td (str (.toString @decimal n))]])))
 
@@ -61,10 +67,30 @@
      [component-to-base 8]
      [component-to-base 16]]]])
 
+(defn component-convert-with-fn [label f]
+  (let [text (r/atom "")]
+    (fn []
+      [:tr
+       [:td "入力"]
+       [:td (component-text-input text)]
+       [:td "出力: " label]
+       [:td (f @text)]])))
+
+(defn component-upper-lower []
+  [:section
+   [:h1 "大文字小文字変換"]
+   [:hr]
+   [:table
+    [:tbody
+     [component-convert-with-fn "大文字へ変換" string/upper-case]
+     [component-convert-with-fn "小文字へ変換" string/lower-case]
+     ]]])
+
 (defn ui []
   [:div
    (component-bmi)
-   (component-to-bases)])
+   (component-to-bases)
+   (component-upper-lower)])
 
 ;; lifecycle hook ;;
 (defn ^:dev/before-load stop []
