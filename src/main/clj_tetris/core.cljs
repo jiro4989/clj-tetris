@@ -86,11 +86,37 @@
      [component-convert-with-fn "小文字へ変換" string/lower-case]
      ]]])
 
+(defn component-square []
+  (let [w (r/atom 3)
+        h (r/atom 3)]
+    (fn []
+      [:section
+       [:h1 "矩形を作る"]
+        [:hr]
+        [:table
+         [:tbody
+          [:tr
+           [:td "横幅"]
+           [:td (component-number-input w)]
+           [:td "縦幅"]
+           [:td (component-number-input h)]]]]
+        [:table
+         [:tbody
+          (doall
+            (for [i (range 0 @w)]
+              ^{:key i}
+              [:tr
+               (doall
+                 (for [j (range 0 @h)]
+                   ^{:key j}
+                   [:td "x"]))]))]]])))
+
 (defn ui []
   [:div
    (component-bmi)
    (component-to-bases)
-   (component-upper-lower)])
+   (component-upper-lower)
+   [component-square]])
 
 ;; lifecycle hook ;;
 (defn ^:dev/before-load stop []
