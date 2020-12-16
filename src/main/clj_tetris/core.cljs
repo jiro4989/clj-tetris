@@ -27,7 +27,6 @@
   [:section
    [:h1 "BMI計算"]
    [:hr]
-   [:span "以下に入力してね"]
    [:table
     [:tbody
      [:tr
@@ -91,7 +90,7 @@
         h (r/atom 3)]
     (fn []
       [:section
-       [:h1 "矩形を作る"]
+       [:h1 "表生成"]
         [:hr]
         [:table
          [:tbody
@@ -113,10 +112,14 @@
 
 (defn ui []
   [:div
-   (component-bmi)
-   (component-to-bases)
-   (component-upper-lower)
-   [component-square]])
+   [:table
+    [:tbody
+     [:tr
+      [:td (component-bmi)]
+      [:td (component-to-bases)]]
+     [:tr
+      [:td (component-upper-lower)]
+      [:td [component-square]]]]]])
 
 ;; lifecycle hook ;;
 (defn ^:dev/before-load stop []
